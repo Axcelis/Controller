@@ -19,12 +19,12 @@ jobs:
         cl /EHsc .\Controller\main.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:main.exe
     - name: Build unit tests
       run: |
-        cl /EHsc .\Controller\test_controller.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:test_controller.exe
+        cl /EHsc .\Controller\test_controller.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:Controller\test_controller.exe
     - name: Upload test executable
       uses: actions/upload-artifact@v4
       with:
         name: test_controller
-        path: .\Controller\test_controller.exe
+        path: Controller\test_controller.exe
 
   test:
     runs-on: windows-latest
