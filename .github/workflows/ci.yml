@@ -18,12 +18,12 @@ jobs:
       run: |
         pwd
         dir
-        cl /EHsc /IController\Controller D:\a\Controller\Controller\main.cpp Controller\Controller\Equipment.cpp Controller\Controller\Pump.cpp Controller\Controller\Thermometer.cpp Controller\Controller\Valve.cpp /Fe:main.exe
+        cl /EHsc .\Controller\main.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:main.exe
     - name: Build unit tests
       run: |
         pwd
         dir
-        cl /EHsc /IController\Controller Controller\Controller\test_controller.cpp Controller\Controller\Equipment.cpp Controller\Controller\Pump.cpp Controller\Controller\Thermometer.cpp Controller\Controller\Valve.cpp /Fe:test_controller.exe
+        cl /EHsc .\Controller\test_controller.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:test_controller.exe
     - name: Run unit tests
       run: |
         .\test_controller.exe
