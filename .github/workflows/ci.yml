@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: windows-latest
     steps:
     - name: Checkout repository
@@ -24,6 +24,17 @@ jobs:
         pwd
         dir
         cl /EHsc .\Controller\test_controller.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:test_controller.exe
+
+  test:
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Set up MSVC
+      uses: ilammy/msvc-dev-cmd@v1
     - name: Run unit tests
       run: |
-        .\test_controller.exe
+        pwd
+        dir
+        .\Controller\test_controller.exe
