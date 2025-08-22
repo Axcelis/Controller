@@ -1,0 +1,25 @@
+name: Windows C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Set up MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+    - name: Build application
+      run: |
+        cl /EHsc /IController\Controller Controller\Controller\main.cpp Controller\Controller\Equipment.cpp Controller\Controller\Pump.cpp Controller\Controller\Thermometer.cpp Controller\Controller\Valve.cpp /Fe:main.exe
+    - name: Build unit tests
+      run: |
+        cl /EHsc /IController\Controller Controller\Controller\test_controller.cpp Controller\Controller\Equipment.cpp Controller\Controller\Pump.cpp Controller\Controller\Thermometer.cpp Controller\Controller\Valve.cpp /Fe:test_controller.exe
+    - name: Run unit tests
+      run: |
+        .\test_controller.exe

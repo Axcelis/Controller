@@ -44,16 +44,16 @@ void testValve() {
 }
 
 void testStateMachine() {
-    // Minimal mock for state machine testing
+    // Simulate state transitions
     Pump pump;
     Thermometer thermometer;
     Valve valve;
     int tempC = 25;
-    valve.setStatus(ValveStatus::Open);
-    thermometer.setStatus(PumpStatus::On);
-    pump.setStatus(PumpStatus::On);
-    pump.setSpeed(1200);
     // Startup
+    thermometer.setStatus(PumpStatus::On);
+    valve.setStatus(ValveStatus::Open);
+    pump.setSpeed(1200);
+    pump.setStatus(PumpStatus::On);
     assert(pump.getStatus() == PumpStatus::On);
     assert(thermometer.getStatus() == PumpStatus::On);
     assert(valve.getStatus() == ValveStatus::Open);
@@ -64,7 +64,6 @@ void testStateMachine() {
         assert(pump.getStatus() == PumpStatus::Off);
         std::cout << "Thermometer above 100C! Pump turned off." << std::endl;
     }
-    // ValveClosed
     valve.setStatus(ValveStatus::Closed);
     if (valve.getStatus() == ValveStatus::Closed) {
         pump.setStatus(PumpStatus::Off);
