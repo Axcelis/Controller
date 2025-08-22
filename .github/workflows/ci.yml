@@ -18,7 +18,7 @@ jobs:
       run: |
         pwd
         dir
-        cl /EHsc /IController\Controller Controller\Controller\main.cpp Controller\Controller\Equipment.cpp Controller\Controller\Pump.cpp Controller\Controller\Thermometer.cpp Controller\Controller\Valve.cpp /Fe:main.exe
+        cl /EHsc /IController\Controller main.cpp Equipment.cpp Pump.cpp Thermometer.cpp Valve.cpp /Fe:main.exe
     - name: Build unit tests
       run: |
         pwd
