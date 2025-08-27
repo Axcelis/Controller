@@ -88,30 +88,17 @@ if (!(Test-Path $CppzmqHeader)) {
 
 
 # Compile with MSVC (force x64)
-$clPath = "${env:VCToolsInstallDir}bin\Hostx64\x64\cl.exe"
-$MSVCBase = Split-Path $clPath -Parent
-$MSVCInclude = Join-Path $MSVCBase "..\..\..\..\include"
-$MSVCLib = Join-Path $MSVCBase "..\..\..\..\lib\x64"
-#$env:INCLUDE = "$MSVCInclude;$IncludeDir"
-#$env:LIB = "$MSVCLib;$LibDir"
+ $clPath = "${env:VCToolsInstallDir}bin\Hostx64\x64\cl.exe"
+ # Do not set INCLUDE or LIB manually; rely on MSVC dev environment
 if (Test-Path $clPath) {
-    $MSVCInclude = "$env:VCToolsInstallDir\include"
-    $MSVCLib = "$env:VCToolsInstallDir\lib\x64"
-    # Auto-detect Windows SDK version
-    $WinSdkRoot = "C:\Program Files (x86)\Windows Kits\10"
-    $SdkVersions = Get-ChildItem "$WinSdkRoot\Include" | Where-Object { $_.PSIsContainer } | Sort-Object Name -Descending
-    $SdkVersion = $SdkVersions[0].Name
-    $WinSdkInclude = @("$WinSdkRoot\Include\$SdkVersion\ucrt", "$WinSdkRoot\Include\$SdkVersion\shared", "$WinSdkRoot\Include\$SdkVersion\um", "$WinSdkRoot\Include\$SdkVersion\winrt") -join ';'
-    $WinSdkLib = @("$WinSdkRoot\Lib\$SdkVersion\ucrt\x64", "$WinSdkRoot\Lib\$SdkVersion\um\x64") -join ';'
-    #$env:INCLUDE = "$MSVCInclude;$WinSdkInclude;$IncludeDir"
-    #$env:LIB = "$MSVCLib;$WinSdkLib;$LibDir"
+    # MSVC and Windows SDK environment is already set up by the dev command in CI
     Write-Host "Using x64 cl.exe: $clPath"
-    & $clPath /EHsc /MD /I"$IncludeDir" $MainSrcFiles /link /LIBPATH:"$LibDir" /LIBPATH:"$MSVCLib" $ZmqLibName /OUT:$MainOutputExe /machine:x64
+    & $clPath /EHsc /MD /I"$IncludeDir" $MainSrcFiles /link /LIBPATH:"$LibDir" $ZmqLibName /OUT:$MainOutputExe /machine:x64
     Write-Host "Compiling test_controller project..."
     if ($TestSrcFiles) {
         # Ensure $TestAllSrcFiles is a true array
-        $TestAllSrcFiles = @($TestSrcFiles) + @($ControllerImplFiles)
-        $clArgs = @('/EHsc', '/MD', "/I$IncludeDir") + $TestAllSrcFiles + @('/link', "/LIBPATH:$LibDir", "/LIBPATH:$MSVCLib", $ZmqLibName, "/OUT:$TestOutputExe", '/machine:x64')
+    $TestAllSrcFiles = @($TestSrcFiles) + @($ControllerImplFiles)
+    $clArgs = @('/EHsc', '/MD', "/I$IncludeDir") + $TestAllSrcFiles + @('/link', "/LIBPATH:$LibDir", $ZmqLibName, "/OUT:$TestOutputExe", '/machine:x64')
         Write-Host "cl.exe arguments for test_controller.exe:"
         Write-Host "Type: $($TestAllSrcFiles.GetType().Name), Count: $($TestAllSrcFiles.Count)"
         $clArgs | ForEach-Object { Write-Host $_ }
