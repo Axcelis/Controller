@@ -74,3 +74,35 @@ jobs:
     - name: Run integration tests
       run: |
         .\Controller\test_controller.exe zmq
+
+# Release job: runs after both test-interface and test-unit
+release:
+  runs-on: windows-latest
+  needs: [test-interface, test-unit]
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Download main.exe artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: main_exe
+        path: .
+    - name: Create build metadata
+      run: |
+        $meta = @{
+          build_time = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+          git_commit = (git rev-parse HEAD)
+          runner = $env:RUNNER_NAME
+        } | ConvertTo-Json
+        $meta | Out-File -Encoding utf8 build_metadata.json
+    - name: Zip main.exe and metadata
+      run: |
+        Compress-Archive -Path .\Controller\main.exe,build_metadata.json -DestinationPath Controller.zip
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: Controller Release
+        tag_name: controller-release-${{ github.run_number }}
+        files: Controller.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
