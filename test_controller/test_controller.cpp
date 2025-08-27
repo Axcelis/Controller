@@ -1,9 +1,16 @@
-#include "Equipment.h"
-#include "Pump.h"
-#include "Thermometer.h"
-#include "Valve.h"
+
+#include "../Controller/Equipment.h"
+#include "../Controller/Pump.h"
+#include "../Controller/Thermometer.h"
+#include "../Controller/Valve.h"
+
 #include <cassert>
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <map>
+#include "zmq_test_publisher.h"
+#include "zmq_test_subscriber.h"
 
 void testPump() {
     Pump pump;
@@ -72,11 +79,62 @@ void testStateMachine() {
     }
 }
 
+
+void testZmqMessaging() {
+    ZmqTestPublisher publisher("tcp://*:5556");
+    ZmqTestSubscriber subscriber("tcp://localhost:5555");
+
+    // Give time for sockets to connect
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    // Publish test messages
+    publisher.send("valve_status", "open");
+    publisher.send("pump_status", "on");
+    publisher.send("pump_speed", "1500");
+    publisher.send("thermometer_status", "on");
+    publisher.send("thermometer_temperature", "42");
+
+    // Wait 2 seconds to allow controller to process and publish messages
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // Expected messages from controller
+    std::map<std::string, std::string> expected = {
+        {"controller_state", "NormalOperation"},
+        {"valve_status", "open"},
+        {"pump_status", "on"},
+        {"pump_speed", "1500"},
+        {"thermometer_status", "on"},
+        {"thermometer_temperature", "42"}
+    };
+    std::map<std::string, std::string> received;
+
+    // Keep reading messages until all expected values are received
+    int tries = 0;
+    while (received.size() < expected.size() && tries < 100) {
+        std::string topic, value;
+        if (subscriber.receive(topic, value)) {
+            std::cout << "Received from controller: " << topic << " = " << value << std::endl;
+            if (expected.count(topic) && value == expected[topic]) {
+                received[topic] = value;
+            }
+        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            ++tries;
+        }
+    }
+
+    // Assert all expected messages were received and match
+    for (const auto& kv : expected) {
+        assert(received.count(kv.first) && received[kv.first] == kv.second);
+    }
+}
+
 int main() {
     testPump();
     testThermometer();
     testValve();
     testStateMachine();
+    testZmqMessaging();
     std::cout << "All tests passed!" << std::endl;
     return 0;
 }

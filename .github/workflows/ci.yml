@@ -14,12 +14,9 @@ jobs:
       uses: actions/checkout@v4
     - name: Set up MSVC
       uses: ilammy/msvc-dev-cmd@v1
-    - name: Build application
+    - name: Build with PowerShell script
       run: |
-        cl /EHsc .\Controller\main.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:main.exe
-    - name: Build unit tests
-      run: |
-        cl /EHsc .\Controller\test_controller.cpp .\Controller\Equipment.cpp .\Controller\Pump.cpp .\Controller\Thermometer.cpp .\Controller\Valve.cpp /Fe:Controller\test_controller.exe
+        pwsh .\Controller\build-controller.ps1
     - name: Upload test executable
       uses: actions/upload-artifact@v4
       with:
