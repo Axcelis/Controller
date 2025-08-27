@@ -88,28 +88,19 @@ if (!(Test-Path $CppzmqHeader)) {
 
 
 # Compile with MSVC (force x64)
- $clPath = "${env:VCToolsInstallDir}bin\Hostx64\x64\cl.exe"
- # Do not set INCLUDE or LIB manually; rely on MSVC dev environment
-if (Test-Path $clPath) {
-    # MSVC and Windows SDK environment is already set up by the dev command in CI
-    Write-Host "Using x64 cl.exe: $clPath"
-    & $clPath /EHsc /MD /I"$IncludeDir" $MainSrcFiles /link /LIBPATH:"$LibDir" $ZmqLibName /OUT:$MainOutputExe /machine:x64
-    Write-Host "Compiling test_controller project..."
-    if ($TestSrcFiles) {
-        # Ensure $TestAllSrcFiles is a true array
+Write-Host "Compiling main project..."
+cl.exe /EHsc /MD /I"$IncludeDir" $MainSrcFiles /link /LIBPATH:"$LibDir" $ZmqLibName /OUT:$MainOutputExe /machine:x64
+Write-Host "Compiling test_controller project..."
+if ($TestSrcFiles) {
     $TestAllSrcFiles = @($TestSrcFiles) + @($ControllerImplFiles)
     $clArgs = @('/EHsc', '/MD', "/I$IncludeDir") + $TestAllSrcFiles + @('/link', "/LIBPATH:$LibDir", $ZmqLibName, "/OUT:$TestOutputExe", '/machine:x64')
-        Write-Host "cl.exe arguments for test_controller.exe:"
-        Write-Host "Type: $($TestAllSrcFiles.GetType().Name), Count: $($TestAllSrcFiles.Count)"
-        $clArgs | ForEach-Object { Write-Host $_ }
-        & $clPath @clArgs
-        Write-Host "test_controller.exe built."
-    } else {
-        Write-Host "No test_controller.cpp found in $TestDir. Skipping test build."
-    }
+    Write-Host "cl.exe arguments for test_controller.exe:"
+    Write-Host "Type: $($TestAllSrcFiles.GetType().Name), Count: $($TestAllSrcFiles.Count)"
+    $clArgs | ForEach-Object { Write-Host $_ }
+    cl.exe @clArgs
+    Write-Host "test_controller.exe built."
 } else {
-    Write-Host "x64 cl.exe not found. Please run from the x64 Native Tools Command Prompt for VS."
-    exit 1
+    Write-Host "No test_controller.cpp found in $TestDir. Skipping test build."
 }
 
 # Check for DLL
