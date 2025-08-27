@@ -88,10 +88,10 @@ if (!(Test-Path $CppzmqHeader)) {
 
 
 # Compile with MSVC (force x64)
-#$clPath = "${env:VCToolsInstallDir}bin\Hostx64\x64\cl.exe"
-#$MSVCBase = Split-Path $clPath -Parent
-#$MSVCInclude = Join-Path $MSVCBase "..\..\..\..\include"
-#$MSVCLib = Join-Path $MSVCBase "..\..\..\..\lib\x64"
+$clPath = "${env:VCToolsInstallDir}bin\Hostx64\x64\cl.exe"
+$MSVCBase = Split-Path $clPath -Parent
+$MSVCInclude = Join-Path $MSVCBase "..\..\..\..\include"
+$MSVCLib = Join-Path $MSVCBase "..\..\..\..\lib\x64"
 #$env:INCLUDE = "$MSVCInclude;$IncludeDir"
 #$env:LIB = "$MSVCLib;$LibDir"
 if (Test-Path $clPath) {
