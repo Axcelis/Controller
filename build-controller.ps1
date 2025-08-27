@@ -103,8 +103,8 @@ if (Test-Path $clPath) {
     $SdkVersion = $SdkVersions[0].Name
     $WinSdkInclude = @("$WinSdkRoot\Include\$SdkVersion\ucrt", "$WinSdkRoot\Include\$SdkVersion\shared", "$WinSdkRoot\Include\$SdkVersion\um", "$WinSdkRoot\Include\$SdkVersion\winrt") -join ';'
     $WinSdkLib = @("$WinSdkRoot\Lib\$SdkVersion\ucrt\x64", "$WinSdkRoot\Lib\$SdkVersion\um\x64") -join ';'
-    $env:INCLUDE = "$MSVCInclude;$WinSdkInclude;$IncludeDir"
-    $env:LIB = "$MSVCLib;$WinSdkLib;$LibDir"
+    #$env:INCLUDE = "$MSVCInclude;$WinSdkInclude;$IncludeDir"
+    #$env:LIB = "$MSVCLib;$WinSdkLib;$LibDir"
     Write-Host "Using x64 cl.exe: $clPath"
     & $clPath /EHsc /MD /I"$IncludeDir" $MainSrcFiles /link /LIBPATH:"$LibDir" /LIBPATH:"$MSVCLib" $ZmqLibName /OUT:$MainOutputExe /machine:x64
     Write-Host "Compiling test_controller project..."
