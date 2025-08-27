@@ -14,6 +14,14 @@ jobs:
       uses: actions/checkout@v4
     - name: Set up MSVC
       uses: ilammy/msvc-dev-cmd@v1
+    - name: Set Windows SDK environment variables
+      run: |
+        $sdkPath = "C:\Program Files (x86)\Windows Kits\10"
+        $includePath = "$sdkPath\Include\10.0.19041.0\ucrt;$sdkPath\Include\10.0.19041.0\shared;$sdkPath\Include\10.0.19041.0\um;$sdkPath\Include\10.0.19041.0\winrt"
+        $libPath = "$sdkPath\Lib\10.0.19041.0\ucrt\x64;$sdkPath\Lib\10.0.19041.0\um\x64"
+        echo "INCLUDE=$includePath" | Out-File -Append $env:GITHUB_ENV
+        echo "LIB=$libPath" | Out-File -Append $env:GITHUB_ENV
+      shell: pwsh
     - name: List files for debug
       run: dir
     - name: Build with PowerShell script
