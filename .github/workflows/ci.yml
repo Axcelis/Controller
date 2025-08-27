@@ -18,6 +18,8 @@ jobs:
       run: dir
     - name: Build with PowerShell script
       run: pwsh -File build-controller.ps1
+    - name: List files for debug
+      run: dir
     - name: Upload test executable
       uses: actions/upload-artifact@v4
       with:
