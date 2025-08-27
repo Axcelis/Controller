@@ -107,4 +107,4 @@ jobs:
           tag_name: controller-release-${{ github.run_number }}
           files: Controller.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RYAN_TOKEN }}
