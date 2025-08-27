@@ -130,11 +130,35 @@ void testZmqMessaging() {
 }
 
 int main() {
-    testPump();
-    testThermometer();
-    testValve();
-    testStateMachine();
-    testZmqMessaging();
-    std::cout << "All tests passed!" << std::endl;
+    // Argument parsing
+    // Usage: test_controller.exe [unit|zmq]
+    // If no argument, run both
+    bool ran = false;
+    if (__argc > 1) {
+        std::string arg = __argv[1];
+        if (arg == "unit") {
+            testPump();
+            testThermometer();
+            testValve();
+            testStateMachine();
+            std::cout << "Unit tests passed!" << std::endl;
+            ran = true;
+        } else if (arg == "zmq") {
+            testZmqMessaging();
+            std::cout << "ZMQ messaging test passed!" << std::endl;
+            ran = true;
+        } else {
+            std::cout << "Unknown argument: " << arg << std::endl;
+        }
+    }
+    if (!ran) {
+        std::cout << "Running all tests (unit + zmq)..." << std::endl;
+        testPump();
+        testThermometer();
+        testValve();
+        testStateMachine();
+        testZmqMessaging();
+        std::cout << "All tests passed!" << std::endl;
+    }
     return 0;
 }

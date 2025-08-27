@@ -31,7 +31,24 @@ jobs:
         name: main_exe
         path: main.exe
 
-  test:
+  test-unit:
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Set up MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+    - name: Download test executable
+      uses: actions/download-artifact@v4
+      with:
+        name: test_controller
+        path: .\Controller
+    - name: Run unit tests
+      run: |
+        .\Controller\test_controller.exe unit
+
+  test-interface:
     runs-on: windows-latest
     needs: build
     steps:
@@ -56,4 +73,4 @@ jobs:
         Start-Sleep -Seconds 2
     - name: Run integration tests
       run: |
-        .\Controller\test_controller.exe
+        .\Controller\test_controller.exe zmq
