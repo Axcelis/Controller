@@ -24,12 +24,12 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test_controller
-        path: Controller\test_controller\test_controller.exe
+        path: test_controller.exe
     - name: Upload main executable
       uses: actions/upload-artifact@v4
       with:
         name: main_exe
-        path: Controller\main.exe
+        path: main.exe
 
   test:
     runs-on: windows-latest
