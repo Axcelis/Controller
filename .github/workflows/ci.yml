@@ -14,8 +14,9 @@ jobs:
       uses: actions/checkout@v4
     - name: Set up MSVC
       uses: ilammy/msvc-dev-cmd@v1
-    - name: Build with PowerShell script
+    - name: List files for debug
       run: dir
+    - name: Build with PowerShell script
       run: pwsh -File Controller/build-controller.ps1
     - name: Upload test executable
       uses: actions/upload-artifact@v4
