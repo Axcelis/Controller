@@ -42,18 +42,18 @@ jobs:
       with:
         name: test_controller
         path: .\Controller
-      - name: Download main executable
-        uses: actions/download-artifact@v4
-        with:
-          name: main_exe
-          path: .\Controller
+    - name: Download main executable
+      uses: actions/download-artifact@v4
+      with:
+        name: main_exe
+        path: .\Controller
     - name: Run unit tests
       run: |
         .\Controller\test_controller.exe
-      - name: Start main.exe
-        run: |
-          Start-Process -FilePath ".\Controller\main.exe"
-          Start-Sleep -Seconds 2
-      - name: Run integration tests
-        run: |
-          .\Controller\test_controller.exe
+    - name: Start main.exe
+      run: |
+        Start-Process -FilePath ".\Controller\main.exe"
+        Start-Sleep -Seconds 2
+    - name: Run integration tests
+      run: |
+        .\Controller\test_controller.exe
