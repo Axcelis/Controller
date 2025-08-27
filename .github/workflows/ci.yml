@@ -95,6 +95,8 @@ jobs:
             runner = $env:RUNNER_NAME
           } | ConvertTo-Json
           $meta | Out-File -Encoding utf8 build_metadata.json
+      - name: List files for debug
+        run: dir
       - name: Zip main.exe and metadata
         run: |
           Compress-Archive -Path .\Controller\main.exe,build_metadata.json -DestinationPath Controller.zip
