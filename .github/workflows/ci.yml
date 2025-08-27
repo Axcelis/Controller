@@ -18,11 +18,18 @@ jobs:
       run: dir
     - name: Build with PowerShell script
       run: pwsh -File build-controller.ps1
+    - name: List files for debug
+      run: dir
     - name: Upload test executable
       uses: actions/upload-artifact@v4
       with:
         name: test_controller
-        path: Controller\test_controller.exe
+        path: Controller\test_controller\test_controller.exe
+      - name: Upload main executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: main_exe
+          path: Controller\main.exe
 
   test:
     runs-on: windows-latest
@@ -37,6 +44,18 @@ jobs:
       with:
         name: test_controller
         path: .\Controller
+      - name: Download main executable
+        uses: actions/download-artifact@v4
+        with:
+          name: main_exe
+          path: .\Controller
     - name: Run unit tests
       run: |
         .\Controller\test_controller.exe
+      - name: Start main.exe
+        run: |
+          Start-Process -FilePath ".\Controller\main.exe"
+          Start-Sleep -Seconds 2
+      - name: Run integration tests
+        run: |
+          .\Controller\test_controller.exe
