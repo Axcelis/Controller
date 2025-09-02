@@ -108,3 +108,11 @@ jobs:
           files: Controller.zip
         env:
           GITHUB_TOKEN: ${{ secrets.RYAN_TOKEN }}
+      - name: Trigger Integration pipeline
+        if: success() # Only runs if previous steps succeeded
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.RYAN_TOKEN }}
+          repository: Axcelis/Integration
+          event-type: upstream-ci-passed
+          client-payload: '{"source":"controller"}' # or "gui" in GUI repo
