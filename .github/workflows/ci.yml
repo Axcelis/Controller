@@ -2,9 +2,11 @@ name: Windows C++ CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - '**'           # run PRs from any branch
   pull_request:
-    branches: [ main ]
+    branches:
+      - '**'           # run PRs from any branch
 
 jobs:
   build:

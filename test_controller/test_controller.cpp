@@ -112,12 +112,17 @@ void testZmqMessaging() {
     int tries = 0;
     while (received.size() < expected.size() && tries < 100) {
         std::string topic, value;
-        if (subscriber.receive(topic, value)) {
+        if (subscriber.receive(topic, value)) 
+        {
             std::cout << "Received from controller: " << topic << " = " << value << std::endl;
-            if (expected.count(topic) && value == expected[topic]) {
+            if (expected.count(topic) && value == expected[topic]) 
+            {
                 received[topic] = value;
             }
-        } else {
+            ++tries;
+        } 
+        else 
+        {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
             ++tries;
         }
