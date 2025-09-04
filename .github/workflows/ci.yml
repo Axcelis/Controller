@@ -103,8 +103,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Controller Release
-          tag_name: controller-release-${{ github.run_number }}
+          name: Controller Release v1.0.${{ github.run_number }}
+          tag_name: v1.0.${{ github.run_number }}
           files: Controller.zip
         env:
           GITHUB_TOKEN: ${{ secrets.RYAN_TOKEN }}
