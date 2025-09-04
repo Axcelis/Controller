@@ -152,7 +152,7 @@ public:
                 case ControllerState::Done: state_str = "Done"; break;
                 case ControllerState::Idle: state_str = "Idle"; break;
             }
-            publisher.send("controller_state", state_str);
+            //publisher.send("controller_state", state_str);
             publisher.send("valve_status", valve.getStatus() == ValveStatus::Open ? "open" : "closed");
             publisher.send("pump_status", pump.getStatus() == PumpStatus::On ? "on" : "off");
             publisher.send("pump_speed", std::to_string(pump.getSpeed()));
